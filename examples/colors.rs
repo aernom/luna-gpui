@@ -37,7 +37,7 @@ impl Render for AlfaRobot {
 
 fn main() {
     App::new().run(|cx: &mut AppContext| {
-        cx.set_global(Theme::light());
+        cx.set_global(Theme::dark());
         cx.activate(true);
 
         cx.open_window(
