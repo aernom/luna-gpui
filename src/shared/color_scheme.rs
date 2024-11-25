@@ -1,22 +1,37 @@
-use gpui::{rgba, Rgba};
+use gpui::{rgb, Rgba};
 
 pub struct ColorScheme {
+    // Primary
     primary: Rgba,
     on_primary: Rgba,
     primary_container: Rgba,
     on_primary_container: Rgba,
+
+    // Secondary
     secondary: Rgba,
     on_secondary: Rgba,
     secondary_container: Rgba,
     on_secondary_container: Rgba,
+
+    // Tertiary
     tertiary: Rgba,
     on_tertiary: Rgba,
     tertiary_container: Rgba,
     on_tertiary_container: Rgba,
+
+    // Error
     error: Rgba,
     on_error: Rgba,
     error_container: Rgba,
     on_error_container: Rgba,
+
+    // Success
+    success: Rgba,
+    on_success: Rgba,
+    success_container: Rgba,
+    on_success_container: Rgba,
+
+    // Surfaces
     background: Rgba,
     on_background: Rgba,
     surface: Rgba,
@@ -41,81 +56,89 @@ pub struct ColorScheme {
 impl ColorScheme {
     pub fn dark() -> Self {
         Self {
-            primary: rgba(0xA2C9FEFF),
-            on_primary: rgba(0x00325BFF),
-            primary_container: rgba(0x1D4875FF),
-            on_primary_container: rgba(0xD3E4FFFF),
-            secondary: rgba(0xBBC7DBFF),
-            on_secondary: rgba(0x263141FF),
-            secondary_container: rgba(0x3C4858FF),
-            on_secondary_container: rgba(0xD7E3F8FF),
-            tertiary: rgba(0xD8BDE3FF),
-            on_tertiary: rgba(0x3C2947FF),
-            tertiary_container: rgba(0x533F5FFF),
-            on_tertiary_container: rgba(0xF4D9FFFF),
-            error: rgba(0xFFB4ABFF),
-            on_error: rgba(0x690005FF),
-            error_container: rgba(0x93000AFF),
-            on_error_container: rgba(0xFFDAD6FF),
-            background: rgba(0x111418FF),
-            on_background: rgba(0xE1E2E8FF),
-            surface: rgba(0x111418FF),
-            on_surface: rgba(0xE1E2E8FF),
-            surface_variant: rgba(0x43474EFF),
-            on_surface_variant: rgba(0xC3C6CFFF),
-            outline: rgba(0x8D9199FF),
-            outline_variant: rgba(0x43474EFF),
-            scrim: rgba(0x000000FF),
-            inverse_surface: rgba(0xE1E2E8FF),
-            inverse_on_surface: rgba(0x2E3035FF),
-            inverse_primary: rgba(0x38608FFF),
-            surface_dim: rgba(0x111418FF),
-            surface_bright: rgba(0x37393EFF),
-            surface_container_lowest: rgba(0x0B0E13FF),
-            surface_container_low: rgba(0x191C20FF),
-            surface_container: rgba(0x1D2024FF),
-            surface_container_high: rgba(0x272A2FFF),
-            surface_container_highest: rgba(0x32353AFF),
+            primary: rgb(0xa2c9fe),
+            on_primary: rgb(0x00325b),
+            primary_container: rgb(0x1d4875),
+            on_primary_container: rgb(0xd3e4ff),
+            secondary: rgb(0xbbc7db),
+            on_secondary: rgb(0x263141),
+            secondary_container: rgb(0x3c4858),
+            on_secondary_container: rgb(0xd7e3f8),
+            tertiary: rgb(0xd8bde3),
+            on_tertiary: rgb(0x3c2947),
+            tertiary_container: rgb(0x533f5f),
+            on_tertiary_container: rgb(0xf4d9ff),
+            error: rgb(0xffb4ab),
+            on_error: rgb(0x690005),
+            error_container: rgb(0x93000a),
+            on_error_container: rgb(0xffdad6),
+            success: rgb(0x346940),
+            on_success: rgb(0xffffff),
+            success_container: rgb(0xb6f1bc),
+            on_success_container: rgb(0x00210a),
+            background: rgb(0x111418),
+            on_background: rgb(0xe1e2e8),
+            surface: rgb(0x111418),
+            on_surface: rgb(0xe1e2e8),
+            surface_variant: rgb(0x43474e),
+            on_surface_variant: rgb(0xc3c6cf),
+            outline: rgb(0x8d9199),
+            outline_variant: rgb(0x43474e),
+            scrim: rgb(0x000000),
+            inverse_surface: rgb(0xe1e2e8),
+            inverse_on_surface: rgb(0x2e3035),
+            inverse_primary: rgb(0x38608f),
+            surface_dim: rgb(0x111418),
+            surface_bright: rgb(0x37393e),
+            surface_container_lowest: rgb(0x0b0e13),
+            surface_container_low: rgb(0x191c20),
+            surface_container: rgb(0x1d2024),
+            surface_container_high: rgb(0x272a2f),
+            surface_container_highest: rgb(0x32353a),
         }
     }
 
     pub fn light() -> Self {
         Self {
-            primary: rgba(0x38608FFF),
-            on_primary: rgba(0xFFFFFFFF),
-            primary_container: rgba(0xD3E4FFFF),
-            on_primary_container: rgba(0x001C38FF),
-            secondary: rgba(0x545F70FF),
-            on_secondary: rgba(0xFFFFFFFF),
-            secondary_container: rgba(0xD7E3F8FF),
-            on_secondary_container: rgba(0x101C2BFF),
-            tertiary: rgba(0x6C5677FF),
-            on_tertiary: rgba(0xFFFFFFFF),
-            tertiary_container: rgba(0xF4D9FFFF),
-            on_tertiary_container: rgba(0x261431FF),
-            error: rgba(0xBA1A1AFF),
-            on_error: rgba(0xFFFFFFFF),
-            error_container: rgba(0xFFDAD6FF),
-            on_error_container: rgba(0x410002FF),
-            background: rgba(0xF8F9FFFF),
-            on_background: rgba(0x191C20FF),
-            surface: rgba(0xF8F9FFFF),
-            on_surface: rgba(0x191C20FF),
-            surface_variant: rgba(0xDFE2EBFF),
-            on_surface_variant: rgba(0x43474EFF),
-            outline: rgba(0x73777FFF),
-            outline_variant: rgba(0xC3C6CFFF),
-            scrim: rgba(0x000000FF),
-            inverse_surface: rgba(0x2E3035FF),
-            inverse_on_surface: rgba(0xEFF0F7FF),
-            inverse_primary: rgba(0xA2C9FEFF),
-            surface_dim: rgba(0xD8DAE0FF),
-            surface_bright: rgba(0xF8F9FFFF),
-            surface_container_lowest: rgba(0xFFFFFFFF),
-            surface_container_low: rgba(0xF2F3FAFF),
-            surface_container: rgba(0xECEDF4FF),
-            surface_container_high: rgba(0xE7E8EEFF),
-            surface_container_highest: rgba(0xE1E2E8FF),
+            primary: rgb(0x38608f),
+            on_primary: rgb(0xffffff),
+            primary_container: rgb(0xd3e4ff),
+            on_primary_container: rgb(0x001c38),
+            secondary: rgb(0x545f70),
+            on_secondary: rgb(0xffffff),
+            secondary_container: rgb(0xd7e3f8),
+            on_secondary_container: rgb(0x101c2b),
+            tertiary: rgb(0x6c5677),
+            on_tertiary: rgb(0xffffff),
+            tertiary_container: rgb(0xf4d9ff),
+            on_tertiary_container: rgb(0x261431),
+            error: rgb(0xba1a1a),
+            on_error: rgb(0xffffff),
+            error_container: rgb(0xffdad6),
+            on_error_container: rgb(0x410002),
+            success: rgb(0x9ad4a1),
+            on_success: rgb(0x003916),
+            success_container: rgb(0x1a512a),
+            on_success_container: rgb(0xb6f1bc),
+            background: rgb(0xf8f9ff),
+            on_background: rgb(0x191c20),
+            surface: rgb(0xf8f9ff),
+            on_surface: rgb(0x191c20),
+            surface_variant: rgb(0xdfe2eb),
+            on_surface_variant: rgb(0x43474e),
+            outline: rgb(0x73777f),
+            outline_variant: rgb(0xc3c6cf),
+            scrim: rgb(0x000000),
+            inverse_surface: rgb(0x2e3035),
+            inverse_on_surface: rgb(0xeff0f7),
+            inverse_primary: rgb(0xa2c9fe),
+            surface_dim: rgb(0xd8dae0),
+            surface_bright: rgb(0xf8f9ff),
+            surface_container_lowest: rgb(0xffffff),
+            surface_container_low: rgb(0xf2f3fa),
+            surface_container: rgb(0xecedf4),
+            surface_container_high: rgb(0xe7e8ee),
+            surface_container_highest: rgb(0xe1e2e8),
         }
     }
 
@@ -181,6 +204,22 @@ impl ColorScheme {
 
     pub fn on_error_container(&self) -> Rgba {
         self.on_error_container
+    }
+
+    pub fn success(&self) -> Rgba {
+        self.success
+    }
+
+    pub fn on_success(&self) -> Rgba {
+        self.on_success
+    }
+
+    pub fn success_container(&self) -> Rgba {
+        self.success_container
+    }
+
+    pub fn on_success_container(&self) -> Rgba {
+        self.on_success_container
     }
 
     pub fn background(&self) -> Rgba {

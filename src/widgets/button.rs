@@ -19,12 +19,6 @@ pub struct Button {
     stop_propagation: bool,
 }
 
-impl From<Button> for AnyElement {
-    fn from(button: Button) -> Self {
-        button.into_any_element()
-    }
-}
-
 impl Button {
     pub fn new(id: impl Into<ElementId>) -> Self {
         Self {
@@ -57,24 +51,6 @@ impl Button {
     pub fn stop_propagation(mut self, val: bool) -> Self {
         self.stop_propagation = val;
         self
-    }
-}
-
-impl Styled for Button {
-    fn style(&mut self) -> &mut gpui::StyleRefinement {
-        self.base.style()
-    }
-}
-
-impl ParentElement for Button {
-    fn extend(&mut self, elements: impl IntoIterator<Item = gpui::AnyElement>) {
-        self.children.extend(elements)
-    }
-}
-
-impl InteractiveElement for Button {
-    fn interactivity(&mut self) -> &mut gpui::Interactivity {
-        self.base.interactivity()
     }
 }
 
@@ -136,6 +112,30 @@ impl RenderOnce for Button {
                     })
                     .children(self.children),
             )
+    }
+}
+
+impl Styled for Button {
+    fn style(&mut self) -> &mut gpui::StyleRefinement {
+        self.base.style()
+    }
+}
+
+impl ParentElement for Button {
+    fn extend(&mut self, elements: impl IntoIterator<Item = gpui::AnyElement>) {
+        self.children.extend(elements)
+    }
+}
+
+impl InteractiveElement for Button {
+    fn interactivity(&mut self) -> &mut gpui::Interactivity {
+        self.base.interactivity()
+    }
+}
+
+impl From<Button> for AnyElement {
+    fn from(button: Button) -> Self {
+        button.into_any_element()
     }
 }
 
