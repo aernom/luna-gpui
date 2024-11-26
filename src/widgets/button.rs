@@ -1,7 +1,7 @@
 use gpui::{
-    div, prelude::FluentBuilder as _, px, relative, AbsoluteLength, AnyElement, ClickEvent, Div,
-    ElementId, FontWeight, InteractiveElement, IntoElement, MouseButton, ParentElement, RenderOnce,
-    Rgba, SharedString, StatefulInteractiveElement as _, Styled, WindowContext,
+    div, prelude::FluentBuilder as _, px, relative, rgba, AbsoluteLength, AnyElement, ClickEvent,
+    Div, ElementId, FontWeight, InteractiveElement, IntoElement, ParentElement, RenderOnce, Rgba,
+    SharedString, StatefulInteractiveElement as _, Styled, WindowContext,
 };
 
 use crate::{h_flex, Theme};
@@ -14,7 +14,7 @@ pub struct Button {
     label: Option<SharedString>,
     children: Vec<AnyElement>,
     disabled: bool,
-    style: ButtonAppearance,
+    appearance: ButtonAppearance,
     shape: ButtonShape,
     on_click: Option<Box<dyn Fn(&ClickEvent, &mut WindowContext) + 'static>>,
 }
@@ -27,7 +27,7 @@ impl Button {
             label: None,
             children: Vec::new(),
             disabled: false,
-            style: ButtonAppearance::default(),
+            appearance: ButtonAppearance::default(),
             shape: ButtonShape::default(),
             on_click: None,
         }
@@ -38,8 +38,8 @@ impl Button {
         self
     }
 
-    pub fn style(mut self, style: ButtonAppearance) -> Self {
-        self.style = style;
+    pub fn appearance(mut self, style: ButtonAppearance) -> Self {
+        self.appearance = style;
         self
     }
 
@@ -51,25 +51,33 @@ impl Button {
 
 impl RenderOnce for Button {
     fn render(self, cx: &mut WindowContext) -> impl IntoElement {
-        let style: ButtonAppearance = self.style;
-
         self.base
             .id(self.id)
             .flex()
             .items_center()
             .justify_center()
-            .px_3()
-            .py_2()
+            .px(px(12.))
+            .py(px(5.))
             .text_size(px(14.))
             .line_height(px(20.))
             .font_weight(FontWeight::MEDIUM)
-            .text_color(style.text_color(cx))
-            .bg(style.bg(cx))
-            .border_color(style.border_color(cx))
             .rounded(self.shape.radius())
             .cursor_pointer()
             .when(!self.disabled, |button| {
-                button.active(|style| style.opacity(0.8))
+                let colors = self.appearance.base(cx);
+                button
+                    .text_color(colors.text)
+                    .bg(colors.bg)
+                    .border_color(colors.outline)
+                    .hover(|style| {
+                        let colors = self.appearance.hover(cx);
+                        println!("{:?}", colors.text);
+                        style
+                            .text_color(colors.text)
+                            .bg(colors.bg)
+                            .border_color(colors.outline)
+                    })
+                    .active(|style| style.opacity(0.8))
             })
             .when_some(
                 self.on_click.filter(|_| !self.disabled),
@@ -122,6 +130,12 @@ impl From<Button> for AnyElement {
     }
 }
 
+pub struct ButtonStyle {
+    bg: Rgba,
+    text: Rgba,
+    outline: Rgba,
+}
+
 #[derive(Clone, Copy, PartialEq, Eq, Default)]
 pub enum ButtonAppearance {
     #[default]
@@ -132,30 +146,57 @@ pub enum ButtonAppearance {
 }
 
 impl ButtonAppearance {
-    fn bg(&self, cx: &WindowContext) -> Rgba {
+    fn base(&self, cx: &WindowContext) -> ButtonStyle {
+        let colors = Theme::of(cx).color_scheme();
+
         match self {
-            ButtonAppearance::Primary => todo!(),
-            ButtonAppearance::Outline => todo!(),
-            ButtonAppearance::Subtle => todo!(),
-            ButtonAppearance::Transparent => todo!(),
+            ButtonAppearance::Primary => ButtonStyle {
+                bg: colors.primary(),
+                text: colors.on_primary(),
+                outline: rgba(0xffffff00),
+            },
+            ButtonAppearance::Outline => ButtonStyle {
+                bg: colors.neutral(),
+                text: colors.on_neutral(),
+                outline: colors.outline(),
+            },
+            ButtonAppearance::Subtle => ButtonStyle {
+                bg: colors.subtle(),
+                text: colors.on_neutral_variant(),
+                outline: rgba(0xffffff00),
+            },
+            ButtonAppearance::Transparent => ButtonStyle {
+                bg: rgba(0xffffff00),
+                text: colors.on_neutral_variant(),
+                outline: rgba(0xffffff00),
+            },
         }
     }
 
-    fn text_color(&self, cx: &WindowContext) -> Rgba {
-        match self {
-            ButtonAppearance::Primary => todo!(),
-            ButtonAppearance::Outline => todo!(),
-            ButtonAppearance::Subtle => todo!(),
-            ButtonAppearance::Transparent => todo!(),
-        }
-    }
+    fn hover(&self, cx: &WindowContext) -> ButtonStyle {
+        let colors = Theme::of(cx).color_scheme();
 
-    fn border_color(&self, cx: &WindowContext) -> Rgba {
         match self {
-            ButtonAppearance::Primary => todo!(),
-            ButtonAppearance::Outline => todo!(),
-            ButtonAppearance::Subtle => todo!(),
-            ButtonAppearance::Transparent => todo!(),
+            ButtonAppearance::Primary => ButtonStyle {
+                bg: colors.primary_hover(),
+                text: colors.on_primary(),
+                outline: rgba(0xffffff00),
+            },
+            ButtonAppearance::Outline => ButtonStyle {
+                bg: colors.neutral_hover(),
+                text: colors.on_neutral(),
+                outline: colors.outline_hover(),
+            },
+            ButtonAppearance::Subtle => ButtonStyle {
+                bg: colors.subtle_hover(),
+                text: colors.on_neutral(),
+                outline: rgba(0xffffff00),
+            },
+            ButtonAppearance::Transparent => ButtonStyle {
+                bg: rgba(0xffffff00),
+                text: colors.primary(),
+                outline: rgba(0xffffff00),
+            },
         }
     }
 }
@@ -171,7 +212,7 @@ pub enum ButtonShape {
 impl ButtonShape {
     fn radius(&self) -> impl Clone + Into<AbsoluteLength> {
         match self {
-            ButtonShape::Rounded => px(8.),
+            ButtonShape::Rounded => px(4.),
             ButtonShape::Circular => px(9999.),
             ButtonShape::Square => px(0.),
         }

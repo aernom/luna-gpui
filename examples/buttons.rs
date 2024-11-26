@@ -8,29 +8,27 @@ impl Render for AlfaRobot {
         let colors = Theme::of(cx).color_scheme();
 
         div()
-            .flex()
             .w_full()
             .h_full()
-            .text_color(rgb(0xffffff))
+            .flex()
+            .items_center()
+            .justify_center()
+            .gap_4()
+            .text_color(colors.on_neutral())
+            .bg(colors.neutral())
             .children([
-                div()
-                    .flex_1()
-                    .flex()
-                    .items_center()
-                    .justify_center()
-                    .child(Button::new("test").label("Push me!"))
-                    .text_size(px(24.))
-                    .bg(colors.surface_bright())
-                    .text_color(colors.on_surface()),
-                div()
-                    .flex_1()
-                    .flex()
-                    .items_center()
-                    .justify_center()
-                    .child("Right")
-                    .text_size(px(24.))
-                    .bg(colors.surface())
-                    .text_color(colors.on_surface()),
+                Button::new(1)
+                    .label("Primary")
+                    .appearance(ButtonAppearance::Primary),
+                Button::new(2)
+                    .label("Outline")
+                    .appearance(ButtonAppearance::Outline),
+                Button::new(3)
+                    .label("Subtle")
+                    .appearance(ButtonAppearance::Subtle),
+                Button::new(4)
+                    .label("Transparent")
+                    .appearance(ButtonAppearance::Transparent),
             ])
     }
 }
