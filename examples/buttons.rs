@@ -18,17 +18,17 @@ impl Render for AlfaRobot {
             .bg(colors.neutral())
             .children([
                 Button::new(1)
-                    .label("Primary")
-                    .appearance(ButtonAppearance::Primary),
+                    .appearance(ButtonAppearance::Primary)
+                    .child("Primary"),
                 Button::new(2)
-                    .label("Outline")
-                    .appearance(ButtonAppearance::Outline),
+                    .appearance(ButtonAppearance::Outline)
+                    .child("Outline"),
                 Button::new(3)
-                    .label("Subtle")
-                    .appearance(ButtonAppearance::Subtle),
+                    .appearance(ButtonAppearance::Subtle)
+                    .child("Subtle"),
                 Button::new(4)
-                    .label("Transparent")
-                    .appearance(ButtonAppearance::Transparent),
+                    .appearance(ButtonAppearance::Transparent)
+                    .child("Transparent"),
             ])
     }
 }

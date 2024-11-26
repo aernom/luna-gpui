@@ -1,10 +1,10 @@
 use gpui::{
-    div, prelude::FluentBuilder as _, px, relative, rgba, AbsoluteLength, AnyElement, ClickEvent,
-    Div, ElementId, FontWeight, InteractiveElement, IntoElement, ParentElement, RenderOnce, Rgba,
+    div, prelude::FluentBuilder as _, px, rgba, AbsoluteLength, AnyElement, ClickEvent, Div,
+    ElementId, FontWeight, InteractiveElement, IntoElement, ParentElement, RenderOnce, Rgba,
     SharedString, StatefulInteractiveElement as _, Styled, WindowContext,
 };
 
-use crate::{h_flex, Theme};
+use crate::Theme;
 
 /// A Button element.
 #[derive(IntoElement)]
@@ -71,7 +71,6 @@ impl RenderOnce for Button {
                     .border_color(colors.outline)
                     .hover(|style| {
                         let colors = self.appearance.hover(cx);
-                        println!("{:?}", colors.text);
                         style
                             .text_color(colors.text)
                             .bg(colors.bg)
@@ -91,18 +90,7 @@ impl RenderOnce for Button {
             //         .border_color(disabled_style.border)
             //         .shadow_none()
             // })
-            .child(
-                h_flex()
-                    .id("label")
-                    .items_center()
-                    .justify_center()
-                    .gap_2()
-                    .text_base()
-                    .when_some(self.label, |this, label| {
-                        this.child(div().flex_none().line_height(relative(1.)).child(label))
-                    })
-                    .children(self.children),
-            )
+            .children(self.children)
     }
 }
 
