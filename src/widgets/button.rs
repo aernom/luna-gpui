@@ -62,6 +62,7 @@ impl RenderOnce for Button {
             .line_height(px(20.))
             .font_weight(FontWeight::MEDIUM)
             .rounded(self.shape.radius())
+            .border_1()
             .cursor_pointer()
             .when(!self.disabled, |button| {
                 let colors = self.appearance.base(cx);
