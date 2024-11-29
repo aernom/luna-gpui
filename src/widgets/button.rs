@@ -131,7 +131,7 @@ pub enum ButtonAppearance {
     Primary,
     Outline,
     Subtle,
-    Transparent,
+    // Transparent,
 }
 
 impl ButtonAppearance {
@@ -154,11 +154,11 @@ impl ButtonAppearance {
                 text: colors.on_neutral_variant(),
                 outline: rgba(0xffffff00),
             },
-            ButtonAppearance::Transparent => ButtonStyle {
-                bg: rgba(0xffffff00),
-                text: colors.on_neutral_variant(),
-                outline: rgba(0xffffff00),
-            },
+            // ButtonAppearance::Transparent => ButtonStyle {
+            //     bg: rgba(0xffffff00),
+            //     text: colors.on_neutral_variant(),
+            //     outline: rgba(0xffffff00),
+            // },
         }
     }
 
@@ -181,11 +181,11 @@ impl ButtonAppearance {
                 text: colors.on_neutral(),
                 outline: rgba(0xffffff00),
             },
-            ButtonAppearance::Transparent => ButtonStyle {
-                bg: rgba(0xffffff00),
-                text: colors.primary(),
-                outline: rgba(0xffffff00),
-            },
+            // ButtonAppearance::Transparent => ButtonStyle {
+            //     bg: rgba(0xffffff00),
+            //     text: colors.primary(),
+            //     outline: rgba(0xffffff00),
+            // },
         }
     }
 }

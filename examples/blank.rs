@@ -13,20 +13,10 @@ impl Render for AlfaRobot {
             .flex()
             .items_center()
             .justify_center()
-            .gap_4()
             .text_color(colors.on_neutral())
             .bg(colors.neutral())
-            .children([
-                Button::new(1)
-                    .appearance(ButtonAppearance::Primary)
-                    .child("Primary"),
-                Button::new(2)
-                    .appearance(ButtonAppearance::Outline)
-                    .child("Outline"),
-                Button::new(3)
-                    .appearance(ButtonAppearance::Subtle)
-                    .child("Subtle"),
-            ])
+            .child("Test")
+            .hover(|style| style.bg(colors.primary()).text_color(rgb(0x000000)))
     }
 }
 
