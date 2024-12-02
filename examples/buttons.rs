@@ -1,7 +1,9 @@
 use gpui::*;
 use luna::*;
 
-struct AlfaRobot {}
+struct AlfaRobot {
+    selected: bool,
+}
 
 impl Render for AlfaRobot {
     fn render(&mut self, cx: &mut ViewContext<Self>) -> impl IntoElement {
@@ -25,8 +27,13 @@ impl Render for AlfaRobot {
                     .child("Outline"),
                 Button::new(3)
                     .appearance(ButtonAppearance::Subtle)
-                    .child("Subtle"),
+                    .child("Subtle")
+                    .on_click(cx.listener(|view, _, cx| {
+                        view.selected = !view.selected;
+                        cx.notify();
+                    })),
             ])
+            .child(Tab::new("Prova", "Tab 1").selected(self.selected))
     }
 }
 
@@ -49,7 +56,7 @@ fn main() {
                 }),
                 ..Default::default()
             },
-            |cx| cx.new_view(|_cx| AlfaRobot {}),
+            |cx| cx.new_view(|_cx| AlfaRobot { selected: false }),
         )
         .unwrap();
     });
