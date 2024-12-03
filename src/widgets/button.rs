@@ -1,7 +1,7 @@
 use gpui::{
     div, prelude::FluentBuilder as _, px, rgba, AbsoluteLength, AnyElement, ClickEvent, Div,
     ElementId, FontWeight, InteractiveElement, IntoElement, ParentElement, RenderOnce, Rgba,
-    SharedString, StatefulInteractiveElement as _, Styled, WindowContext,
+    SharedString, StatefulInteractiveElement, Styled, WindowContext,
 };
 
 use crate::Theme;

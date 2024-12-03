@@ -4,19 +4,11 @@ use luna::*;
 struct AlfaRobot {}
 
 impl Render for AlfaRobot {
-    fn render(&mut self, cx: &mut ViewContext<Self>) -> impl IntoElement {
-        let colors = Theme::of(cx).color_scheme();
-
+    fn render(&mut self, _: &mut ViewContext<Self>) -> impl IntoElement {
         div()
-            .w_full()
-            .h_full()
-            .flex()
-            .items_center()
-            .justify_center()
-            .text_color(colors.on_neutral())
-            .bg(colors.neutral())
+            .child(TitleBar::new().child(div().text_color(rgb(0xff0000)).child("Titlebar")))
+            .text_color(rgb(0xffffff))
             .child("Test")
-            .hover(|style| style.bg(colors.primary()).text_color(rgb(0x000000)))
     }
 }
 
