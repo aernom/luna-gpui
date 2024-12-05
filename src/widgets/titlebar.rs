@@ -199,6 +199,8 @@ impl RenderOnce for WindowsCaptionButton {
 
         div()
             .id(self.id)
+            .flex()
+            .items_center()
             .justify_center()
             .content_center()
             .w(width)

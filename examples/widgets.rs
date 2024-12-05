@@ -7,33 +7,43 @@ struct AlfaRobot {
 
 impl Render for AlfaRobot {
     fn render(&mut self, cx: &mut ViewContext<Self>) -> impl IntoElement {
-        let colors = Theme::of(cx).color_scheme();
+        let colors = cx.theme().color_scheme();
 
-        div()
-            .w_full()
+        v_flex()
             .h_full()
-            .flex()
-            .items_center()
+            .w_full()
             .justify_center()
+            .content_center()
             .gap_4()
             .text_color(colors.on_neutral())
             .bg(colors.neutral())
-            .children([
-                Button::new(1)
-                    .appearance(ButtonAppearance::Primary)
-                    .child("Primary"),
-                Button::new(2)
-                    .appearance(ButtonAppearance::Outline)
-                    .child("Outline"),
-                Button::new(3)
-                    .appearance(ButtonAppearance::Subtle)
-                    .child("Subtle")
-                    .on_click(cx.listener(|view, _, cx| {
+            .child(div().absolute().inset_0().child(TitleBar::new()))
+            .child(
+                h_flex().gap_2().children([
+                    Button::new(1)
+                        .appearance(ButtonAppearance::Primary)
+                        .child("Primary"),
+                    Button::new(2)
+                        .appearance(ButtonAppearance::Outline)
+                        .child("Outline"),
+                    Button::new(3)
+                        .appearance(ButtonAppearance::Subtle)
+                        .child("Subtle")
+                        .on_click(cx.listener(|view, _, cx| {
+                            view.selected = !view.selected;
+                            cx.notify();
+                        })),
+                ]),
+            )
+            .child(Divider::horizontal())
+            .child(
+                h_flex().child(Tab::new("Prova", "Tab 1").selected(self.selected).on_click(
+                    cx.listener(|view, _, cx| {
                         view.selected = !view.selected;
                         cx.notify();
-                    })),
-            ])
-            .child(Tab::new("Prova", "Tab 1").selected(self.selected))
+                    }),
+                )),
+            )
     }
 }
 

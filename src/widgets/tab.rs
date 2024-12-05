@@ -63,10 +63,7 @@ impl RenderOnce for Tab {
                         .bg(colors.primary()),
                 )
             })
-            .when_some(
-                self.on_click.filter(|_| !self.selected),
-                |this, on_click| this.on_click(on_click),
-            )
+            .when_some(self.on_click, |this, on_click| this.on_click(on_click))
             .child(self.label)
     }
 }
