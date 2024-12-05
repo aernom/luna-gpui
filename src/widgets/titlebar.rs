@@ -8,12 +8,6 @@ use crate::{h_flex, Platform};
 
 const TRAFFIC_LIGHT_PADDING: f32 = 71.;
 
-#[cfg(target_os = "windows")]
-const PLATFORM: Platform = Platform::Windows;
-
-#[cfg(target_os = "macos")]
-const PLATFORM: Platform = Platform::Mac;
-
 #[derive(IntoElement)]
 pub struct TitleBar {
     base: Div,
@@ -23,6 +17,7 @@ pub struct TitleBar {
 impl RenderOnce for TitleBar {
     fn render(self, cx: &mut WindowContext<'_>) -> impl IntoElement {
         let height = Self::height(cx);
+        let platform = Platform::current();
 
         h_flex()
             .id("titlebar")
@@ -31,7 +26,7 @@ impl RenderOnce for TitleBar {
             .map(|this| {
                 if cx.is_fullscreen() {
                     this.pl_2()
-                } else if PLATFORM == Platform::Mac {
+                } else if platform == Platform::Mac {
                     this.pl(px(TRAFFIC_LIGHT_PADDING))
                 } else {
                     this.pl_2()
@@ -45,7 +40,7 @@ impl RenderOnce for TitleBar {
                     .flex_row()
                     .justify_between()
                     .w_full()
-                    .when(PLATFORM != Platform::Windows, |this| {
+                    .when(platform != Platform::Windows, |this| {
                         this.on_click(|event, cx| {
                             if event.up.click_count == 2 {
                                 cx.zoom_window();
@@ -54,7 +49,7 @@ impl RenderOnce for TitleBar {
                     })
                     .children(self.children),
             )
-            .when(!cx.is_fullscreen(), |title_bar| match PLATFORM {
+            .when(!cx.is_fullscreen(), |title_bar| match platform {
                 Platform::Mac | Platform::Linux => title_bar,
                 Platform::Windows => title_bar.child(WindowsWindowControls::new(height)),
             })
