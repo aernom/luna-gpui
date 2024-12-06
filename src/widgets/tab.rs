@@ -28,7 +28,7 @@ impl Tab {
         }
     }
 
-    pub fn set_disabled(mut self, disabled: bool) -> Self {
+    pub fn disabled(mut self, disabled: bool) -> Self {
         self.disabled = disabled;
         self
     }
@@ -48,28 +48,39 @@ impl RenderOnce for Tab {
             .group("tab_area")
             .px_3()
             .py(px(10.))
+            .rounded_md()
             .text_size(px(14.))
             .line_height(px(20.))
             .font_weight(FontWeight::MEDIUM)
-            .rounded_md()
-            .cursor_pointer()
-            .hover(|style| style.bg(colors.subtle_hover()))
-            .active(|style| style.opacity(0.8))
             .child(self.label)
-            .child(
-                div()
-                    .absolute()
-                    .invisible()
-                    .h(px(3.))
-                    .bottom_0()
-                    .left_3()
-                    .right_3()
-                    .map(|indicator| match self.selected {
-                        true => indicator.visible().bg(colors.primary()),
-                        false => indicator
-                            .group_hover("tab_area", |mark| mark.visible().bg(colors.outline())),
-                    }),
-            )
+            .when(self.disabled, |this| {
+                this.text_color(colors.on_neutral_disabled())
+                    .cursor_not_allowed()
+            })
+            .when(!self.disabled, |this| {
+                this.text_color(match self.selected {
+                    true => colors.on_neutral(),
+                    false => colors.on_neutral_variant(),
+                })
+                .cursor_pointer()
+                .hover(|style| style.bg(colors.subtle_hover()))
+                .active(|style| style.opacity(0.8))
+                .child(
+                    div()
+                        .absolute()
+                        .invisible()
+                        .h(px(3.))
+                        .bottom_0()
+                        .left_3()
+                        .right_3()
+                        .map(|this| match self.selected {
+                            true => this.visible().bg(colors.primary_stroke()),
+                            false => this.group_hover("tab_area", |this| {
+                                this.visible().bg(colors.neutral_stroke())
+                            }),
+                        }),
+                )
+            })
             .when_some(
                 self.on_click.filter(|_| !self.disabled),
                 |this, on_click| this.on_click(move |_, cx| on_click(&true, cx)),

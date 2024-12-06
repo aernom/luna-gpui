@@ -66,7 +66,7 @@ impl RenderOnce for Divider {
                     })
                     .bg(self
                         .fill
-                        .unwrap_or(cx.theme().color_scheme().outline().into())),
+                        .unwrap_or(cx.theme().color_scheme().neutral_stroke().into())),
             )
     }
 }

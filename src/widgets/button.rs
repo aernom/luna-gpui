@@ -1,7 +1,7 @@
 use gpui::{
-    div, prelude::FluentBuilder as _, px, rgba, AbsoluteLength, AnyElement, ClickEvent, Div,
-    ElementId, FontWeight, InteractiveElement, IntoElement, ParentElement, RenderOnce, Rgba,
-    SharedString, StatefulInteractiveElement, Styled, WindowContext,
+    div, prelude::FluentBuilder, px, rgba, AbsoluteLength, AnyElement, ClickEvent, Div, ElementId,
+    FontWeight, InteractiveElement, IntoElement, ParentElement, RenderOnce, Rgba, SharedString,
+    StatefulInteractiveElement, Styled, WindowContext,
 };
 
 use crate::Theme;
@@ -43,6 +43,16 @@ impl Button {
         self
     }
 
+    pub fn shape(mut self, shape: ButtonShape) -> Self {
+        self.shape = shape;
+        self
+    }
+
+    pub fn disabled(mut self, disabled: bool) -> Self {
+        self.disabled = disabled;
+        self
+    }
+
     pub fn on_click(mut self, handler: impl Fn(&ClickEvent, &mut WindowContext) + 'static) -> Self {
         self.on_click = Some(Box::new(handler));
         self
@@ -64,33 +74,30 @@ impl RenderOnce for Button {
             .rounded(self.shape.radius())
             .border_1()
             .cursor_pointer()
-            .when(!self.disabled, |button| {
+            .when(!self.disabled, |this| {
                 let colors = self.appearance.base(cx);
-                button
-                    .text_color(colors.text)
+                this.text_color(colors.text)
                     .bg(colors.bg)
                     .border_color(colors.outline)
-                    .hover(|style| {
+                    .hover(|this| {
                         let colors = self.appearance.hover(cx);
-                        style
-                            .text_color(colors.text)
+                        this.text_color(colors.text)
                             .bg(colors.bg)
                             .border_color(colors.outline)
                     })
                     .active(|style| style.opacity(0.8))
             })
+            .when(self.disabled, |this| {
+                let colors = self.appearance.disabled(cx);
+                this.text_color(colors.text)
+                    .bg(colors.bg)
+                    .border_color(colors.outline)
+                    .cursor_not_allowed()
+            })
             .when_some(
                 self.on_click.filter(|_| !self.disabled),
                 |this, on_click| this.on_click(on_click),
             )
-            // .when(self.disabled, |this| {
-            //     let disabled_style = style.disabled(cx);
-            //     this.cursor_not_allowed()
-            //         .bg(disabled_style.bg)
-            //         .text_color(disabled_style.fg)
-            //         .border_color(disabled_style.border)
-            //         .shadow_none()
-            // })
             .children(self.children)
     }
 }
@@ -131,7 +138,6 @@ pub enum ButtonAppearance {
     Primary,
     Outline,
     Subtle,
-    // Transparent,
 }
 
 impl ButtonAppearance {
@@ -147,18 +153,13 @@ impl ButtonAppearance {
             ButtonAppearance::Outline => ButtonStyle {
                 bg: colors.neutral(),
                 text: colors.on_neutral(),
-                outline: colors.outline(),
+                outline: colors.neutral_stroke(),
             },
             ButtonAppearance::Subtle => ButtonStyle {
                 bg: colors.subtle(),
                 text: colors.on_neutral_variant(),
                 outline: rgba(0xffffff00),
             },
-            // ButtonAppearance::Transparent => ButtonStyle {
-            //     bg: rgba(0xffffff00),
-            //     text: colors.on_neutral_variant(),
-            //     outline: rgba(0xffffff00),
-            // },
         }
     }
 
@@ -174,18 +175,35 @@ impl ButtonAppearance {
             ButtonAppearance::Outline => ButtonStyle {
                 bg: colors.neutral_hover(),
                 text: colors.on_neutral(),
-                outline: colors.outline_hover(),
+                outline: colors.neutral_stroke_hover(),
             },
             ButtonAppearance::Subtle => ButtonStyle {
                 bg: colors.subtle_hover(),
                 text: colors.on_neutral(),
                 outline: rgba(0xffffff00),
             },
-            // ButtonAppearance::Transparent => ButtonStyle {
-            //     bg: rgba(0xffffff00),
-            //     text: colors.primary(),
-            //     outline: rgba(0xffffff00),
-            // },
+        }
+    }
+
+    fn disabled(&self, cx: &WindowContext) -> ButtonStyle {
+        let colors = Theme::of(cx).color_scheme();
+
+        match self {
+            ButtonAppearance::Primary => ButtonStyle {
+                bg: colors.neutral_disabled(),
+                text: colors.on_neutral_disabled(),
+                outline: rgba(0xffffff00),
+            },
+            ButtonAppearance::Outline => ButtonStyle {
+                bg: colors.neutral_disabled(),
+                text: colors.on_neutral_disabled(),
+                outline: colors.neutral_stroke_disabled(),
+            },
+            ButtonAppearance::Subtle => ButtonStyle {
+                bg: rgba(0xffffff00),
+                text: colors.on_neutral_disabled(),
+                outline: rgba(0xffffff00),
+            },
         }
     }
 }

@@ -16,7 +16,7 @@ impl Render for AlfaRobot {
             .content_center()
             .gap_4()
             .text_color(colors.on_neutral())
-            .bg(colors.neutral())
+            .bg(colors.surface())
             .child(div().absolute().inset_0().child(TitleBar::new()))
             .child(
                 h_flex().gap_2().children([
@@ -31,27 +31,71 @@ impl Render for AlfaRobot {
                         .child("Subtle"),
                 ]),
             )
+            .child(
+                h_flex().gap_2().children([
+                    Button::new(4)
+                        .appearance(ButtonAppearance::Primary)
+                        .disabled(true)
+                        .child("Primary Disabled"),
+                    Button::new(5)
+                        .appearance(ButtonAppearance::Outline)
+                        .disabled(true)
+                        .child("Outline Disabled"),
+                    Button::new(6)
+                        .appearance(ButtonAppearance::Subtle)
+                        .disabled(true)
+                        .child("Subtle Disabled"),
+                ]),
+            )
+            .child(
+                h_flex().gap_2().children([
+                    Button::new(7)
+                        .appearance(ButtonAppearance::Outline)
+                        .shape(ButtonShape::Rounded)
+                        .child("Rounded"),
+                    Button::new(8)
+                        .appearance(ButtonAppearance::Outline)
+                        .shape(ButtonShape::Circular)
+                        .child("Circular"),
+                    Button::new(9)
+                        .appearance(ButtonAppearance::Outline)
+                        .shape(ButtonShape::Square)
+                        .child("Square"),
+                ]),
+            )
             .child(Divider::horizontal())
-            .child(h_flex().children([
-                Tab::new("enex", "Enex", self.selected_tab == Some("enex")).on_click(cx.listener(
-                    |view, _, cx| {
-                        view.selected_tab = Some("enex");
-                        cx.notify();
-                    },
-                )),
-                Tab::new("epta", "Epta", self.selected_tab == Some("epta")).on_click(cx.listener(
-                    |view, _, cx| {
+            .child(
+                h_flex().children([
+                    Tab::new("enex", "Enex", self.selected_tab == Some("enex")).on_click(
+                        cx.listener(|view, _, cx| {
+                            view.selected_tab = Some("enex");
+                            cx.notify();
+                        }),
+                    ),
+                    Tab::new("epta", "Epta", self.selected_tab == Some("epta")).on_click(
+                        cx.listener(|view, _, cx| {
+                            view.selected_tab = Some("epta");
+                            cx.notify();
+                        }),
+                    ),
+                    Tab::new(
+                        "disabled",
+                        "Disabled",
+                        self.selected_tab == Some("disabled"),
+                    )
+                    .disabled(true)
+                    .on_click(cx.listener(|view, _, cx| {
                         view.selected_tab = Some("epta");
                         cx.notify();
-                    },
-                )),
-            ]))
+                    })),
+                ]),
+            )
     }
 }
 
 fn main() {
     App::new().run(|cx: &mut AppContext| {
-        cx.set_global(Theme::light());
+        cx.set_global(Theme::system(cx));
         cx.activate(true);
 
         cx.open_window(

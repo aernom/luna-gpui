@@ -1,7 +1,9 @@
 mod layout;
-mod shared;
+mod platform;
+mod theme;
 mod widgets;
 
 pub use layout::*;
-pub use shared::*;
+pub use platform::*;
+pub use theme::*;
 pub use widgets::*;
