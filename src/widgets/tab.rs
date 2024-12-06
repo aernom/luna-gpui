@@ -1,5 +1,5 @@
 use gpui::{
-    div, prelude::FluentBuilder as _, px, AnyElement, ClickEvent, Div, ElementId, FontWeight,
+    div, prelude::FluentBuilder as _, px, AnyElement, Div, ElementId, FontWeight,
     InteractiveElement, IntoElement, ParentElement, RenderOnce, SharedString,
     StatefulInteractiveElement as _, Styled, WindowContext,
 };
@@ -12,26 +12,28 @@ pub struct Tab {
     id: ElementId,
     label: SharedString,
     selected: bool,
-    on_click: Option<Box<dyn Fn(&ClickEvent, &mut WindowContext) + 'static>>,
+    disabled: bool,
+    on_click: Option<Box<dyn Fn(&bool, &mut WindowContext) + 'static>>,
 }
 
 impl Tab {
-    pub fn new(id: impl Into<ElementId>, label: impl Into<SharedString>) -> Self {
+    pub fn new(id: impl Into<ElementId>, label: impl Into<SharedString>, selected: bool) -> Self {
         Self {
             base: div(),
             id: id.into(),
             label: label.into(),
-            selected: false,
+            selected,
+            disabled: false,
             on_click: None,
         }
     }
 
-    pub fn selected(mut self, selected: bool) -> Self {
-        self.selected = selected;
+    pub fn set_disabled(mut self, disabled: bool) -> Self {
+        self.disabled = disabled;
         self
     }
 
-    pub fn on_click(mut self, handler: impl Fn(&ClickEvent, &mut WindowContext) + 'static) -> Self {
+    pub fn on_click(mut self, handler: impl Fn(&bool, &mut WindowContext) + 'static) -> Self {
         self.on_click = Some(Box::new(handler));
         self
     }
@@ -43,6 +45,7 @@ impl RenderOnce for Tab {
 
         self.base
             .id(self.id)
+            .group("tab_area")
             .px_3()
             .py(px(10.))
             .text_size(px(14.))
@@ -52,19 +55,25 @@ impl RenderOnce for Tab {
             .cursor_pointer()
             .hover(|style| style.bg(colors.subtle_hover()))
             .active(|style| style.opacity(0.8))
-            .when(self.selected, |tab| {
-                tab.child(
-                    div()
-                        .absolute()
-                        .h(px(3.))
-                        .bottom_0()
-                        .left_3()
-                        .right_3()
-                        .bg(colors.primary()),
-                )
-            })
-            .when_some(self.on_click, |this, on_click| this.on_click(on_click))
             .child(self.label)
+            .child(
+                div()
+                    .absolute()
+                    .invisible()
+                    .h(px(3.))
+                    .bottom_0()
+                    .left_3()
+                    .right_3()
+                    .map(|indicator| match self.selected {
+                        true => indicator.visible().bg(colors.primary()),
+                        false => indicator
+                            .group_hover("tab_area", |mark| mark.visible().bg(colors.outline())),
+                    }),
+            )
+            .when_some(
+                self.on_click.filter(|_| !self.disabled),
+                |this, on_click| this.on_click(move |_, cx| on_click(&true, cx)),
+            )
     }
 }
 

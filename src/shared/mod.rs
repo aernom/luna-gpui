@@ -1,7 +1,7 @@
-mod color_scheme;
 mod platform;
 mod theme;
+mod traits;
 
-pub use color_scheme::*;
 pub use platform::*;
 pub use theme::*;
+pub use traits::*;

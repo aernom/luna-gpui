@@ -1,10 +1,10 @@
 use gpui::{
     div, prelude::FluentBuilder, px, AnyElement, Div, ElementId, InteractiveElement, Interactivity,
     IntoElement, ParentElement, Pixels, RenderOnce, Rgba, StatefulInteractiveElement, Styled,
-    WindowAppearance, WindowContext,
+    WindowContext,
 };
 
-use crate::{h_flex, Platform};
+use crate::{h_flex, Brightness, Platform, ThemeProvider};
 
 const TRAFFIC_LIGHT_PADDING: f32 = 71.;
 
@@ -106,6 +106,8 @@ impl WindowsWindowControls {
 
 impl RenderOnce for WindowsWindowControls {
     fn render(self, cx: &mut WindowContext) -> impl IntoElement {
+        let brightness = cx.theme().brightness();
+
         let close_button_hover_color = Rgba {
             r: 232.0 / 255.0,
             g: 17.0 / 255.0,
@@ -113,14 +115,14 @@ impl RenderOnce for WindowsWindowControls {
             a: 1.0,
         };
 
-        let button_hover_color = match cx.appearance() {
-            WindowAppearance::Light | WindowAppearance::VibrantLight => Rgba {
+        let button_hover_color = match brightness {
+            Brightness::Light => Rgba {
                 r: 0.1,
                 g: 0.1,
                 b: 0.1,
                 a: 0.2,
             },
-            WindowAppearance::Dark | WindowAppearance::VibrantDark => Rgba {
+            Brightness::Dark => Rgba {
                 r: 0.9,
                 g: 0.9,
                 b: 0.9,

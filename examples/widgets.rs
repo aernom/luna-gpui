@@ -2,7 +2,7 @@ use gpui::*;
 use luna::*;
 
 struct AlfaRobot {
-    selected: bool,
+    selected_tab: Option<&'static str>,
 }
 
 impl Render for AlfaRobot {
@@ -28,28 +28,30 @@ impl Render for AlfaRobot {
                         .child("Outline"),
                     Button::new(3)
                         .appearance(ButtonAppearance::Subtle)
-                        .child("Subtle")
-                        .on_click(cx.listener(|view, _, cx| {
-                            view.selected = !view.selected;
-                            cx.notify();
-                        })),
+                        .child("Subtle"),
                 ]),
             )
             .child(Divider::horizontal())
-            .child(
-                h_flex().child(Tab::new("Prova", "Tab 1").selected(self.selected).on_click(
-                    cx.listener(|view, _, cx| {
-                        view.selected = !view.selected;
+            .child(h_flex().children([
+                Tab::new("enex", "Enex", self.selected_tab == Some("enex")).on_click(cx.listener(
+                    |view, _, cx| {
+                        view.selected_tab = Some("enex");
                         cx.notify();
-                    }),
+                    },
                 )),
-            )
+                Tab::new("epta", "Epta", self.selected_tab == Some("epta")).on_click(cx.listener(
+                    |view, _, cx| {
+                        view.selected_tab = Some("epta");
+                        cx.notify();
+                    },
+                )),
+            ]))
     }
 }
 
 fn main() {
     App::new().run(|cx: &mut AppContext| {
-        cx.set_global(Theme::dark());
+        cx.set_global(Theme::light());
         cx.activate(true);
 
         cx.open_window(
@@ -66,7 +68,7 @@ fn main() {
                 }),
                 ..Default::default()
             },
-            |cx| cx.new_view(|_cx| AlfaRobot { selected: false }),
+            |cx| cx.new_view(|_cx| AlfaRobot { selected_tab: None }),
         )
         .unwrap();
     });
