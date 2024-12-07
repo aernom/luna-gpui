@@ -7,6 +7,8 @@ pub struct ColorScheme {
     neutral_stroke: Rgba,
     neutral_stroke_hover: Rgba,
     neutral_stroke_disabled: Rgba,
+    neutral_stroke_dim: Rgba,
+    neutral_stroke_subtle: Rgba,
     on_neutral: Rgba,
     on_neutral_variant: Rgba,
     on_neutral_disabled: Rgba,
@@ -30,6 +32,8 @@ impl ColorScheme {
             neutral_stroke: rgb(0xd1d1d1),
             neutral_stroke_hover: rgb(0xc7c7c7),
             neutral_stroke_disabled: rgb(0xe0e0e0),
+            neutral_stroke_dim: rgb(0xe0e0e0),
+            neutral_stroke_subtle: rgb(0xf0f0f0),
             on_neutral: rgb(0x242424),
             on_neutral_variant: rgb(0x424242),
             on_neutral_disabled: rgb(0xbdbdbd),
@@ -53,6 +57,8 @@ impl ColorScheme {
             neutral_stroke: rgb(0x666666),
             neutral_stroke_hover: rgb(0x757575),
             neutral_stroke_disabled: rgb(0x424242),
+            neutral_stroke_dim: rgb(0x525252),
+            neutral_stroke_subtle: rgb(0x3d3d3d),
             on_neutral: rgb(0xffffff),
             on_neutral_variant: rgb(0xd6d6d6),
             on_neutral_disabled: rgb(0x5c5c5c),
@@ -90,6 +96,14 @@ impl ColorScheme {
 
     pub fn neutral_stroke_disabled(&self) -> Rgba {
         self.neutral_stroke_disabled
+    }
+
+    pub fn neutral_stroke_dim(&self) -> Rgba {
+        self.neutral_stroke_dim
+    }
+
+    pub fn neutral_stroke_subtle(&self) -> Rgba {
+        self.neutral_stroke_subtle
     }
 
     pub fn on_neutral(&self) -> Rgba {

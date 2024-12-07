@@ -5,13 +5,12 @@ use gpui::{
 
 use crate::ThemeProvider;
 
-/// A divider that can be either vertical or horizontal.
 #[derive(IntoElement)]
 pub struct Divider {
     base: Div,
     label: Option<SharedString>,
     axis: Axis,
-    fill: Option<Hsla>,
+    style: DividerStyle,
 }
 
 impl Divider {
@@ -20,7 +19,7 @@ impl Divider {
             base: div().h_full(),
             axis: Axis::Vertical,
             label: None,
-            fill: None,
+            style: DividerStyle::default(),
         }
     }
 
@@ -29,12 +28,12 @@ impl Divider {
             base: div().w_full(),
             axis: Axis::Horizontal,
             label: None,
-            fill: None,
+            style: DividerStyle::default(),
         }
     }
 
-    pub fn fill(mut self, fill: impl Into<Hsla>) -> Self {
-        self.fill = Some(fill.into());
+    pub fn style(mut self, style: DividerStyle) -> Self {
+        self.style = style;
         self
     }
 
@@ -64,9 +63,31 @@ impl RenderOnce for Divider {
                         Axis::Vertical => div.w(px(1.)).h_full(),
                         Axis::Horizontal => div.h(px(1.)).w_full(),
                     })
-                    .bg(self
-                        .fill
-                        .unwrap_or(cx.theme().color_scheme().neutral_stroke().into())),
+                    .bg(self.style.fill(cx)),
             )
+    }
+}
+
+#[derive(Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Copy)]
+pub enum DividerStyle {
+    #[default]
+    Default,
+    Subtle,
+    Strong,
+    Primary,
+    Custom(Hsla),
+}
+
+impl DividerStyle {
+    fn fill(&self, cx: &WindowContext) -> Hsla {
+        let colors = cx.theme().color_scheme();
+
+        match self {
+            DividerStyle::Default => colors.neutral_stroke_dim().into(),
+            DividerStyle::Subtle => colors.neutral_stroke_subtle().into(),
+            DividerStyle::Strong => colors.neutral_stroke().into(),
+            DividerStyle::Primary => colors.primary_stroke().into(),
+            DividerStyle::Custom(hsla) => *hsla,
+        }
     }
 }

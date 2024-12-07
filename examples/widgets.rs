@@ -64,6 +64,10 @@ impl Render for AlfaRobot {
                 ]),
             )
             .child(Divider::horizontal())
+            .child(Divider::horizontal().style(DividerStyle::Subtle))
+            .child(Divider::horizontal().style(DividerStyle::Strong))
+            .child(Divider::horizontal().style(DividerStyle::Primary))
+            .child(Divider::horizontal().style(DividerStyle::Custom(rgb(0xc239b3).into())))
             .child(
                 h_flex().children([
                     Tab::new("enex", "Enex", self.selected_tab == Some("enex")).on_click(
