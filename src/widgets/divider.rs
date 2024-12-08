@@ -1,6 +1,6 @@
 use gpui::{
-    div, prelude::FluentBuilder, px, Axis, Div, Hsla, IntoElement, ParentElement, RenderOnce,
-    SharedString, StyleRefinement, Styled, WindowContext,
+    div, prelude::FluentBuilder, px, Axis, Div, Hsla, IntoElement, RenderOnce, SharedString,
+    StyleRefinement, Styled, WindowContext,
 };
 
 use crate::ThemeProvider;
@@ -16,7 +16,7 @@ pub struct Divider {
 impl Divider {
     pub fn vertical() -> Self {
         Self {
-            base: div().h_full(),
+            base: div(),
             axis: Axis::Vertical,
             label: None,
             style: DividerStyle::default(),
@@ -25,7 +25,7 @@ impl Divider {
 
     pub fn horizontal() -> Self {
         Self {
-            base: div().w_full(),
+            base: div(),
             axis: Axis::Horizontal,
             label: None,
             style: DividerStyle::default(),
@@ -52,19 +52,11 @@ impl Styled for Divider {
 impl RenderOnce for Divider {
     fn render(self, cx: &mut WindowContext) -> impl gpui::IntoElement {
         self.base
-            .flex()
-            .flex_shrink_0()
-            .items_center()
-            .justify_center()
-            .child(
-                div()
-                    .absolute()
-                    .map(|div| match self.axis {
-                        Axis::Vertical => div.w(px(1.)).h_full(),
-                        Axis::Horizontal => div.h(px(1.)).w_full(),
-                    })
-                    .bg(self.style.fill(cx)),
-            )
+            .map(|this| match self.axis {
+                Axis::Vertical => this.h_full().w(px(1.)),
+                Axis::Horizontal => this.w_full().h(px(1.)),
+            })
+            .bg(self.style.fill(cx))
     }
 }
 

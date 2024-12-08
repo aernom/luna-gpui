@@ -6,7 +6,6 @@ use gpui::{
 
 use crate::Theme;
 
-/// A Button element.
 #[derive(IntoElement)]
 pub struct Button {
     pub base: Div,
