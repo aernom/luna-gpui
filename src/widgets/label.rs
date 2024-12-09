@@ -3,8 +3,6 @@ use gpui::{
     ParentElement, RenderOnce, StyleRefinement, Styled, UnderlineStyle, WindowContext,
 };
 
-use crate::ThemeProvider;
-
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Copy, Default)]
 pub enum LabelSize {
     #[default]
@@ -22,35 +20,8 @@ pub enum LineHeightStyle {
     UiLabel,
 }
 
-/// A common set of traits all labels must implement.
-pub trait LabelCommon {
-    /// Sets the size of the label using a [`LabelSize`].
-    fn size(self, size: LabelSize) -> Self;
-
-    /// Sets the font weight of the label.
-    fn weight(self, weight: FontWeight) -> Self;
-
-    /// Sets the line height style of the label using a [`LineHeightStyle`].
-    fn line_height_style(self, line_height_style: LineHeightStyle) -> Self;
-
-    /// Sets the color of the label using a [`Color`].
-    fn color(self, color: impl Into<Hsla>) -> Self;
-
-    /// Sets the strikethrough property of the label.
-    fn strikethrough(self, strikethrough: bool) -> Self;
-
-    /// Sets the italic property of the label.
-    fn italic(self, italic: bool) -> Self;
-
-    /// Sets the underline property of the label
-    fn underline(self, underline: bool) -> Self;
-
-    /// Sets the label to render as a single line.
-    fn single_line(self) -> Self;
-}
-
 #[derive(IntoElement)]
-pub struct LabelLike {
+pub struct Label {
     base: Div,
     size: LabelSize,
     weight: Option<FontWeight>,
@@ -63,13 +34,13 @@ pub struct LabelLike {
     single_line: bool,
 }
 
-impl Default for LabelLike {
+impl Default for Label {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl LabelLike {
+impl Label {
     pub fn new() -> Self {
         Self {
             base: div(),
@@ -84,64 +55,61 @@ impl LabelLike {
             single_line: false,
         }
     }
-}
 
-// Style methods.
-impl Styled for LabelLike {
-    fn style(&mut self) -> &mut StyleRefinement {
-        self.base.style()
-    }
-}
-
-impl LabelCommon for LabelLike {
-    fn size(mut self, size: LabelSize) -> Self {
+    pub fn size(mut self, size: LabelSize) -> Self {
         self.size = size;
         self
     }
 
-    fn weight(mut self, weight: FontWeight) -> Self {
+    pub fn weight(mut self, weight: FontWeight) -> Self {
         self.weight = Some(weight);
         self
     }
 
-    fn line_height_style(mut self, line_height_style: LineHeightStyle) -> Self {
+    pub fn line_height_style(mut self, line_height_style: LineHeightStyle) -> Self {
         self.line_height_style = line_height_style;
         self
     }
 
-    fn color(mut self, color: impl Into<Hsla>) -> Self {
+    pub fn color(mut self, color: impl Into<Hsla>) -> Self {
         self.color = Some(color.into());
         self
     }
 
-    fn strikethrough(mut self, strikethrough: bool) -> Self {
+    pub fn strikethrough(mut self, strikethrough: bool) -> Self {
         self.strikethrough = strikethrough;
         self
     }
 
-    fn italic(mut self, italic: bool) -> Self {
+    pub fn italic(mut self, italic: bool) -> Self {
         self.italic = italic;
         self
     }
 
-    fn underline(mut self, underline: bool) -> Self {
+    pub fn underline(mut self, underline: bool) -> Self {
         self.underline = underline;
         self
     }
 
-    fn single_line(mut self) -> Self {
+    pub fn single_line(mut self) -> Self {
         self.single_line = true;
         self
     }
 }
 
-impl ParentElement for LabelLike {
+impl Styled for Label {
+    fn style(&mut self) -> &mut StyleRefinement {
+        self.base.style()
+    }
+}
+
+impl ParentElement for Label {
     fn extend(&mut self, elements: impl IntoIterator<Item = AnyElement>) {
         self.children.extend(elements)
     }
 }
 
-impl RenderOnce for LabelLike {
+impl RenderOnce for Label {
     fn render(self, _: &mut WindowContext) -> impl IntoElement {
         self.base
             .map(|this| match self.size {
