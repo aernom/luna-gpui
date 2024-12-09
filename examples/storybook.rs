@@ -4,8 +4,24 @@ use gpui::*;
 use luna::*;
 use pages::*;
 
+#[derive(Debug, PartialEq, Eq)]
+enum StorybookPage {
+    Buttons,
+    Dividers,
+}
+
+impl Into<ElementId> for StorybookPage {
+    fn into(self) -> ElementId {
+        match self {
+            StorybookPage::Buttons => "buttons_page",
+            StorybookPage::Dividers => "dividers_page",
+        }
+        .into()
+    }
+}
+
 struct AlfaRobot {
-    selected_tab: &'static str,
+    selected_tab: StorybookPage,
 }
 
 impl Render for AlfaRobot {
@@ -17,32 +33,34 @@ impl Render for AlfaRobot {
             .h_full()
             .text_color(colors.on_neutral())
             .bg(colors.surface())
-            .child(TitleBar::new())
+            .child(TitleBar::new().child(div().text_sm().child("This is a custom TitleBar")))
             .child(
-                h_flex().children([
+                h_flex().mb_6().children([
                     Tab::new(
-                        "buttons_page",
+                        StorybookPage::Buttons,
                         "Buttons",
-                        self.selected_tab == "buttons_page",
+                        self.selected_tab == StorybookPage::Buttons,
                     )
                     .on_click(cx.listener(|view, _, cx| {
-                        view.selected_tab = "buttons_page";
+                        view.selected_tab = StorybookPage::Buttons;
                         cx.notify();
                     })),
                     Tab::new(
-                        "dividers_page",
+                        StorybookPage::Dividers,
                         "Dividers",
-                        self.selected_tab == "dividers_page",
+                        self.selected_tab == StorybookPage::Dividers,
                     )
                     .on_click(cx.listener(|view, _, cx| {
-                        view.selected_tab = "dividers_page";
+                        view.selected_tab = StorybookPage::Dividers;
                         cx.notify();
                     })),
                     Tab::new("disabled", "Disabled", false).disabled(true),
                 ]),
             )
-            .child(cx.new_view(|_| ButtonsPage {}))
-            .child(cx.new_view(|_| DividersPage {}))
+            .child(match self.selected_tab {
+                StorybookPage::Buttons => buttons_page(),
+                StorybookPage::Dividers => dividers_page(),
+            })
     }
 }
 
@@ -67,7 +85,7 @@ fn main() {
             },
             |cx| {
                 cx.new_view(|_cx| AlfaRobot {
-                    selected_tab: "buttons_page",
+                    selected_tab: StorybookPage::Buttons,
                 })
             },
         )
