@@ -10,8 +10,7 @@ use crate::Theme;
 pub struct Button {
     pub base: Div,
     id: ElementId,
-    label: Option<SharedString>,
-    children: Vec<AnyElement>,
+    label: SharedString,
     disabled: bool,
     appearance: ButtonAppearance,
     shape: ButtonShape,
@@ -19,22 +18,16 @@ pub struct Button {
 }
 
 impl Button {
-    pub fn new(id: impl Into<ElementId>) -> Self {
+    pub fn new(id: impl Into<ElementId>, label: impl Into<SharedString>) -> Self {
         Self {
             base: div().flex_shrink_0(),
             id: id.into(),
-            label: None,
-            children: Vec::new(),
+            label: label.into(),
             disabled: false,
             appearance: ButtonAppearance::default(),
             shape: ButtonShape::default(),
             on_click: None,
         }
-    }
-
-    pub fn label(mut self, label: impl Into<SharedString>) -> Self {
-        self.label = Some(label.into());
-        self
     }
 
     pub fn appearance(mut self, style: ButtonAppearance) -> Self {
@@ -97,19 +90,13 @@ impl RenderOnce for Button {
                 self.on_click.filter(|_| !self.disabled),
                 |this, on_click| this.on_click(on_click),
             )
-            .children(self.children)
+            .child(self.label)
     }
 }
 
 impl Styled for Button {
     fn style(&mut self) -> &mut gpui::StyleRefinement {
         self.base.style()
-    }
-}
-
-impl ParentElement for Button {
-    fn extend(&mut self, elements: impl IntoIterator<Item = gpui::AnyElement>) {
-        self.children.extend(elements)
     }
 }
 
