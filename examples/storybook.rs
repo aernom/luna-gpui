@@ -1,5 +1,9 @@
+mod assets;
 mod pages;
 
+use std::path::PathBuf;
+
+use assets::Assets;
 use gpui::*;
 use luna::*;
 use pages::*;
@@ -61,34 +65,44 @@ impl Render for AlfaRobot {
                 StorybookPage::Buttons => buttons_page(),
                 StorybookPage::Dividers => dividers_page(),
             })
+            .child(
+                svg()
+                    .path("rocket.svg")
+                    .w_24()
+                    .h_24()
+                    .mt_4()
+                    .text_color(colors.primary()),
+            )
     }
 }
 
 fn main() {
-    App::new().run(|cx: &mut AppContext| {
-        cx.set_global(Theme::system(cx));
-        cx.activate(true);
+    App::new()
+        .with_assets(Assets::from(PathBuf::from("examples/assets")))
+        .run(|cx: &mut AppContext| {
+            cx.set_global(Theme::system(cx));
+            cx.activate(true);
 
-        cx.open_window(
-            WindowOptions {
-                window_bounds: Some(WindowBounds::Windowed(Bounds::centered(
-                    None,
-                    size(px(800.0), px(600.0)),
-                    cx,
-                ))),
-                titlebar: Some(TitlebarOptions {
-                    title: Some("AlfaRobot".into()),
-                    appears_transparent: true,
-                    ..TitlebarOptions::default()
-                }),
-                ..Default::default()
-            },
-            |cx| {
-                cx.new_view(|_cx| AlfaRobot {
-                    selected_tab: StorybookPage::Buttons,
-                })
-            },
-        )
-        .unwrap();
-    });
+            cx.open_window(
+                WindowOptions {
+                    window_bounds: Some(WindowBounds::Windowed(Bounds::centered(
+                        None,
+                        size(px(800.0), px(600.0)),
+                        cx,
+                    ))),
+                    titlebar: Some(TitlebarOptions {
+                        title: Some("AlfaRobot".into()),
+                        appears_transparent: true,
+                        ..TitlebarOptions::default()
+                    }),
+                    ..Default::default()
+                },
+                |cx| {
+                    cx.new_view(|_cx| AlfaRobot {
+                        selected_tab: StorybookPage::Buttons,
+                    })
+                },
+            )
+            .unwrap();
+        });
 }
