@@ -5,13 +5,14 @@ use std::path::PathBuf;
 
 use assets::Assets;
 use gpui::*;
-use luna::*;
+use luna::{InputEvent, *};
 use pages::*;
 
 #[derive(Debug, PartialEq, Eq)]
 enum StorybookPage {
     Buttons,
     Dividers,
+    Inputs,
 }
 
 impl Into<ElementId> for StorybookPage {
@@ -19,18 +20,35 @@ impl Into<ElementId> for StorybookPage {
         match self {
             StorybookPage::Buttons => "buttons_page",
             StorybookPage::Dividers => "dividers_page",
+            StorybookPage::Inputs => "inputs_page",
         }
         .into()
     }
 }
 
-struct AlfaRobot {
+struct Storybook {
     selected_tab: StorybookPage,
 }
 
-impl Render for AlfaRobot {
+impl Render for Storybook {
     fn render(&mut self, cx: &mut ViewContext<Self>) -> impl IntoElement {
         let colors = cx.theme().color_scheme();
+
+        let input1 = cx.new_view(|cx| {
+            let mut input = TextInput::new(cx);
+            input.set_text("Hello, this is LUNA.", cx);
+            input
+        });
+
+        // cx.subscribe(&input1, |_, _, ev, cx| {
+        //     match ev {
+        //         InputEvent::Change(text) => println!("Change: {}", text),
+        //         InputEvent::PressEnter => println!("PressEnter"),
+        //         InputEvent::Focus => println!("Focus"),
+        //         InputEvent::Blur => println!("Blur"),
+        //     };
+        // })
+        // .detach();
 
         v_flex()
             .w_full()
@@ -64,6 +82,7 @@ impl Render for AlfaRobot {
             .child(match self.selected_tab {
                 StorybookPage::Buttons => buttons_page(),
                 StorybookPage::Dividers => dividers_page(),
+                StorybookPage::Inputs => inputs_page(cx),
             })
             .child(
                 svg()
@@ -98,7 +117,7 @@ fn main() {
                     ..Default::default()
                 },
                 |cx| {
-                    cx.new_view(|_cx| AlfaRobot {
+                    cx.new_view(|_cx| Storybook {
                         selected_tab: StorybookPage::Buttons,
                     })
                 },
