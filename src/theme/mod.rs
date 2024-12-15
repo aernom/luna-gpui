@@ -13,7 +13,7 @@ pub enum Brightness {
 
 pub struct Theme {
     brightness: Brightness,
-    color_scheme: ColorScheme,
+    colors: ColorScheme,
 }
 
 impl Theme {
@@ -27,14 +27,14 @@ impl Theme {
     pub fn dark() -> Self {
         Self {
             brightness: Brightness::Dark,
-            color_scheme: ColorScheme::dark(),
+            colors: ColorScheme::dark(),
         }
     }
 
     pub fn light() -> Self {
         Self {
             brightness: Brightness::Light,
-            color_scheme: ColorScheme::light(),
+            colors: ColorScheme::light(),
         }
     }
 
@@ -46,8 +46,8 @@ impl Theme {
         &self.brightness
     }
 
-    pub fn color_scheme(&self) -> &ColorScheme {
-        &self.color_scheme
+    pub fn colors(&self) -> &ColorScheme {
+        &self.colors
     }
 }
 

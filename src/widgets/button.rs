@@ -1,8 +1,9 @@
 use gpui::{
     div, prelude::FluentBuilder, px, rgba, AbsoluteLength, AnyElement, ClickEvent, Div, ElementId,
-    FontWeight, InteractiveElement, IntoElement, ParentElement, RenderOnce, Rgba, SharedString,
+    FontWeight, InteractiveElement, IntoElement, ParentElement, RenderOnce, Rgba,
     StatefulInteractiveElement, Styled, WindowContext,
 };
+use smallvec::SmallVec;
 
 use crate::Theme;
 
@@ -10,7 +11,7 @@ use crate::Theme;
 pub struct Button {
     pub base: Div,
     id: ElementId,
-    label: SharedString,
+    children: SmallVec<[AnyElement; 2]>,
     disabled: bool,
     appearance: ButtonAppearance,
     shape: ButtonShape,
@@ -18,11 +19,11 @@ pub struct Button {
 }
 
 impl Button {
-    pub fn new(id: impl Into<ElementId>, label: impl Into<SharedString>) -> Self {
+    pub fn new(id: impl Into<ElementId>) -> Self {
         Self {
             base: div().flex_shrink_0(),
             id: id.into(),
-            label: label.into(),
+            children: SmallVec::new(),
             disabled: false,
             appearance: ButtonAppearance::default(),
             shape: ButtonShape::default(),
@@ -88,9 +89,21 @@ impl RenderOnce for Button {
             })
             .when_some(
                 self.on_click.filter(|_| !self.disabled),
-                |this, on_click| this.on_click(on_click),
+                |this, on_click| {
+                    this.on_mouse_down(gpui::MouseButton::Left, |_, cx| cx.prevent_default())
+                        .on_click(move |event, cx| {
+                            cx.stop_propagation();
+                            (on_click)(event, cx)
+                        })
+                },
             )
-            .child(self.label)
+            .children(self.children)
+    }
+}
+
+impl ParentElement for Button {
+    fn extend(&mut self, elements: impl IntoIterator<Item = AnyElement>) {
+        self.children.extend(elements);
     }
 }
 
@@ -112,7 +125,7 @@ impl From<Button> for AnyElement {
     }
 }
 
-pub struct ButtonStyle {
+struct ButtonStyle {
     bg: Rgba,
     text: Rgba,
     outline: Rgba,
@@ -128,7 +141,7 @@ pub enum ButtonAppearance {
 
 impl ButtonAppearance {
     fn base(&self, cx: &WindowContext) -> ButtonStyle {
-        let colors = Theme::of(cx).color_scheme();
+        let colors = Theme::of(cx).colors();
 
         match self {
             ButtonAppearance::Primary => ButtonStyle {
@@ -150,7 +163,7 @@ impl ButtonAppearance {
     }
 
     fn hover(&self, cx: &WindowContext) -> ButtonStyle {
-        let colors = Theme::of(cx).color_scheme();
+        let colors = Theme::of(cx).colors();
 
         match self {
             ButtonAppearance::Primary => ButtonStyle {
@@ -172,7 +185,7 @@ impl ButtonAppearance {
     }
 
     fn disabled(&self, cx: &WindowContext) -> ButtonStyle {
-        let colors = Theme::of(cx).color_scheme();
+        let colors = Theme::of(cx).colors();
 
         match self {
             ButtonAppearance::Primary => ButtonStyle {

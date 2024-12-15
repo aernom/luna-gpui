@@ -146,7 +146,7 @@ impl TextElement {
                         ),
                         size(px(1.5), line_height),
                     ),
-                    cx.theme().color_scheme().primary_compound(),
+                    cx.theme().colors().primary_compound(),
                 ))
             };
         }
@@ -362,9 +362,9 @@ impl Element for TextElement {
         let mut bounds = bounds;
 
         let (display_text, text_color) = if text.is_empty() {
-            (placeholder, cx.theme().color_scheme().on_neutral_variant())
+            (placeholder, cx.theme().colors().on_neutral_variant())
         } else {
-            (text, cx.theme().color_scheme().on_neutral())
+            (text, cx.theme().colors().on_neutral())
         };
 
         let run = TextRun {
@@ -480,7 +480,7 @@ impl Element for TextElement {
 
         // Paint selections
         if let Some(path) = prepaint.selection_path.take() {
-            cx.paint_path(path, cx.theme().color_scheme().primary_compound());
+            cx.paint_path(path, cx.theme().colors().primary_compound());
         }
 
         // Paint multi line text

@@ -41,7 +41,7 @@ impl Tab {
 
 impl RenderOnce for Tab {
     fn render(self, cx: &mut WindowContext) -> impl IntoElement {
-        let colors = Theme::of(cx).color_scheme();
+        let colors = Theme::of(cx).colors();
 
         self.base
             .id(self.id)

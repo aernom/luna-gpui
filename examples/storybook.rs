@@ -35,8 +35,8 @@ impl Render for Storybook {
         v_flex()
             .w_full()
             .h_full()
-            .text_color(cx.theme().color_scheme().on_neutral())
-            .bg(cx.theme().color_scheme().surface())
+            .text_color(cx.theme().colors().on_neutral())
+            .bg(cx.theme().colors().surface())
             .child(TitleBar::new().child(div().text_sm().child("This is a custom TitleBar")))
             .child(
                 h_flex().mb_6().children([
@@ -73,7 +73,7 @@ impl Render for Storybook {
                     .w_24()
                     .h_24()
                     .mt_4()
-                    .text_color(cx.theme().color_scheme().primary()),
+                    .text_color(cx.theme().colors().primary()),
             )
     }
 }

@@ -1045,7 +1045,7 @@ impl Render for TextInput {
         let prefix = self.prefix.as_ref().map(|build| build(cx));
         let suffix = self.suffix.as_ref().map(|build| build(cx));
 
-        let colors = cx.theme().color_scheme();
+        let colors = cx.theme().colors();
 
         div()
             .flex()

@@ -72,7 +72,7 @@ pub enum DividerStyle {
 
 impl DividerStyle {
     fn fill(&self, cx: &WindowContext) -> Hsla {
-        let colors = cx.theme().color_scheme();
+        let colors = cx.theme().colors();
 
         match self {
             DividerStyle::Default => colors.neutral_stroke_dim().into(),
