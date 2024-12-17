@@ -1,4 +1,4 @@
-use gpui::{svg, Div, ParentElement, Styled};
+use gpui::{black, div, svg, Div, ParentElement, Styled};
 use luna::{h_flex, v_flex, Button, ButtonAppearance, ButtonShape};
 
 pub fn buttons_page() -> Div {
@@ -21,6 +21,7 @@ pub fn buttons_page() -> Div {
             h_flex().gap_2().children([
                 Button::new(4)
                     .label("Primary Disabled")
+                    .leading(svg().path("send.svg"))
                     .appearance(ButtonAppearance::Primary)
                     .disabled(true),
                 Button::new(5)
@@ -58,6 +59,14 @@ pub fn buttons_page() -> Div {
                     .leading(svg().path("send.svg"))
                     .trailing(svg().path("send.svg"))
                     .label("Cookie"),
+                Button::new(13).leading(svg().path("send.svg")).label(
+                    v_flex().items_start().child("Buttons can have").child(
+                        div()
+                            .text_xs()
+                            .text_color(black())
+                            .child("SECONDARY CONTENT"),
+                    ),
+                ),
             ]),
         )
 }
