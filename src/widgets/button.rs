@@ -1,7 +1,7 @@
 use gpui::{
     div, prelude::FluentBuilder, px, rgba, AbsoluteLength, AnyElement, ClickEvent, Div, ElementId,
     FontWeight, InteractiveElement, IntoElement, ParentElement, RenderOnce, Rgba,
-    StatefulInteractiveElement, Styled, WindowContext,
+    StatefulInteractiveElement, Styled, Svg, WindowContext,
 };
 use smallvec::SmallVec;
 
@@ -12,6 +12,9 @@ pub struct Button {
     pub base: Div,
     id: ElementId,
     children: SmallVec<[AnyElement; 2]>,
+    leading: Option<Svg>,
+    trailing: Option<Svg>,
+    label: Option<AnyElement>,
     disabled: bool,
     appearance: ButtonAppearance,
     shape: ButtonShape,
@@ -24,11 +27,29 @@ impl Button {
             base: div().flex_shrink_0(),
             id: id.into(),
             children: SmallVec::new(),
+            leading: None,
+            trailing: None,
+            label: None,
             disabled: false,
             appearance: ButtonAppearance::default(),
             shape: ButtonShape::default(),
             on_click: None,
         }
+    }
+
+    pub fn label(mut self, label: impl IntoElement) -> Self {
+        self.label = Some(label.into_any_element());
+        self
+    }
+
+    pub fn leading(mut self, leading: Svg) -> Self {
+        self.leading = Some(leading);
+        self
+    }
+
+    pub fn trailing(mut self, trailing: Svg) -> Self {
+        self.trailing = Some(trailing);
+        self
     }
 
     pub fn appearance(mut self, style: ButtonAppearance) -> Self {
@@ -68,37 +89,41 @@ impl RenderOnce for Button {
             .rounded(self.shape.radius())
             .border_1()
             .cursor_pointer()
-            .when(!self.disabled, |this| {
-                let colors = self.appearance.base(cx);
-                this.text_color(colors.text)
-                    .bg(colors.bg)
-                    .border_color(colors.outline)
-                    .hover(|this| {
-                        let colors = self.appearance.hover(cx);
-                        this.text_color(colors.text)
-                            .bg(colors.bg)
-                            .border_color(colors.outline)
-                    })
-                    .active(|style| style.opacity(0.8))
-            })
-            .when(self.disabled, |this| {
-                let colors = self.appearance.disabled(cx);
-                this.text_color(colors.text)
-                    .bg(colors.bg)
-                    .border_color(colors.outline)
-                    .cursor_not_allowed()
-            })
-            .when_some(
-                self.on_click.filter(|_| !self.disabled),
-                |this, on_click| {
-                    this.on_mouse_down(gpui::MouseButton::Left, |_, cx| cx.prevent_default())
-                        .on_click(move |event, cx| {
-                            cx.stop_propagation();
-                            (on_click)(event, cx)
+            .map(|this| {
+                if self.disabled {
+                    let colors = self.appearance.disabled(cx);
+                    this.text_color(colors.text)
+                        .bg(colors.bg)
+                        .border_color(colors.outline)
+                        .cursor_not_allowed()
+                        .when_some(self.leading, |this, leading| {
+                            this.child(leading.w_5().h_5().text_color(colors.text))
                         })
-                },
-            )
-            .children(self.children)
+                        .when_some(self.label, |this, label| this.child(label))
+                        .when_some(self.trailing, |this, trailing| {
+                            this.child(trailing.w_5().h_5().text_color(colors.text))
+                        })
+                } else {
+                    let colors = self.appearance.base(cx);
+                    this.text_color(colors.text)
+                        .bg(colors.bg)
+                        .border_color(colors.outline)
+                        .hover(|this| {
+                            let colors = self.appearance.hover(cx);
+                            this.text_color(colors.text)
+                                .bg(colors.bg)
+                                .border_color(colors.outline)
+                        })
+                        .active(|style| style.opacity(0.8))
+                        .when_some(self.leading, |this, leading| {
+                            this.child(leading.size_5().text_color(colors.text))
+                        })
+                        .when_some(self.label, |this, label| this.child(label))
+                        .when_some(self.trailing, |this, trailing| {
+                            this.child(trailing.size_5().text_color(colors.text))
+                        })
+                }
+            })
     }
 }
 

@@ -1,4 +1,4 @@
-use gpui::{svg, white, Div, ParentElement, Styled};
+use gpui::{svg, Div, ParentElement, Styled};
 use luna::{h_flex, v_flex, Button, ButtonAppearance, ButtonShape};
 
 pub fn buttons_page() -> Div {
@@ -7,48 +7,57 @@ pub fn buttons_page() -> Div {
         .child(
             h_flex().gap_2().children([
                 Button::new(1)
-                    .child("Primary")
+                    .label("Primary")
                     .appearance(ButtonAppearance::Primary),
                 Button::new(2)
-                    .child("Outline")
+                    .label("Outline")
                     .appearance(ButtonAppearance::Outline),
                 Button::new(3)
-                    .child("Subtle")
+                    .label("Subtle")
                     .appearance(ButtonAppearance::Subtle),
             ]),
         )
         .child(
             h_flex().gap_2().children([
                 Button::new(4)
-                    .child("Primary Disabled")
+                    .label("Primary Disabled")
                     .appearance(ButtonAppearance::Primary)
                     .disabled(true),
                 Button::new(5)
-                    .child("Outline Disabled")
+                    .label("Outline Disabled")
                     .appearance(ButtonAppearance::Outline)
                     .disabled(true),
                 Button::new(6)
-                    .child("Subtle Disabled")
+                    .label("Subtle Disabled")
                     .appearance(ButtonAppearance::Subtle)
                     .disabled(true),
             ]),
         )
         .child(
             h_flex().gap_2().children([
-                Button::new(7).child("Rounded"),
+                Button::new(7).label("Rounded"),
                 Button::new(8)
-                    .child("Circular")
+                    .label("Circular")
                     .appearance(ButtonAppearance::Outline)
                     .shape(ButtonShape::Circular),
                 Button::new(9)
-                    .child("Square")
+                    .label("Square")
                     .appearance(ButtonAppearance::Outline)
                     .shape(ButtonShape::Square),
             ]),
         )
         .child(
-            Button::new(10)
-                .child(svg().path("send.svg").w_5().h_5().text_color(white()))
-                .child("Cookie"),
+            h_flex().gap_2().children([
+                Button::new(10)
+                    .leading(svg().path("send.svg"))
+                    .label("Cookie"),
+                Button::new(11)
+                    .trailing(svg().path("send.svg"))
+                    .label("Cookie"),
+                Button::new(12)
+                    .leading(svg().path("send.svg"))
+                    .trailing(svg().path("send.svg"))
+                    .label("Cookie"),
+            ]),
         )
 }
