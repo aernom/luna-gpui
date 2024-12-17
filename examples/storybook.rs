@@ -65,7 +65,7 @@ impl Render for Storybook {
             .child(match self.selected_tab {
                 Story::Button => buttons_page(),
                 Story::Divider => dividers_page(),
-                Story::Input => div().p_12().child(InputStory::view(cx)),
+                Story::Input => div().p_12(), /*.child(InputStory::view(cx))*/
             })
             .child(
                 svg()

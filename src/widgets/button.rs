@@ -61,6 +61,7 @@ impl RenderOnce for Button {
             .justify_center()
             .px(px(12.))
             .py(px(5.))
+            .gap_x(px(5.))
             .text_size(px(14.))
             .line_height(px(20.))
             .font_weight(FontWeight::MEDIUM)

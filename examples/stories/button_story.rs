@@ -1,4 +1,4 @@
-use gpui::{Div, ParentElement, Styled};
+use gpui::{svg, white, Div, ParentElement, Styled};
 use luna::{h_flex, v_flex, Button, ButtonAppearance, ButtonShape};
 
 pub fn buttons_page() -> Div {
@@ -45,5 +45,10 @@ pub fn buttons_page() -> Div {
                     .appearance(ButtonAppearance::Outline)
                     .shape(ButtonShape::Square),
             ]),
+        )
+        .child(
+            Button::new(10)
+                .child(svg().path("send.svg").w_5().h_5().text_color(white()))
+                .child("Cookie"),
         )
 }
