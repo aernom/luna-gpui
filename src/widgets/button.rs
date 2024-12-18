@@ -1,11 +1,11 @@
 use gpui::{
-    div, prelude::FluentBuilder, px, rgba, AbsoluteLength, AnyElement, ClickEvent, Div, ElementId,
-    FontWeight, InteractiveElement, IntoElement, ParentElement, RenderOnce, Rgba,
-    StatefulInteractiveElement, Styled, Svg, WindowContext,
+    div, prelude::FluentBuilder, px, relative, rgba, AbsoluteLength, AnyElement, ClickEvent,
+    CursorStyle, Div, ElementId, FontWeight, InteractiveElement, IntoElement, ParentElement,
+    RenderOnce, Rgba, StatefulInteractiveElement, Styled, Svg, WindowContext,
 };
 use smallvec::SmallVec;
 
-use crate::{BorderRadius, Theme};
+use crate::{BorderRadius, Clickable, Disableable, FixedWidth, Theme};
 
 #[derive(IntoElement)]
 pub struct Button {
@@ -19,6 +19,7 @@ pub struct Button {
     appearance: ButtonAppearance,
     shape: ButtonShape,
     on_click: Option<Box<dyn Fn(&ClickEvent, &mut WindowContext) + 'static>>,
+    cursor_style: CursorStyle,
 }
 
 impl Button {
@@ -34,6 +35,7 @@ impl Button {
             appearance: ButtonAppearance::default(),
             shape: ButtonShape::default(),
             on_click: None,
+            cursor_style: CursorStyle::PointingHand,
         }
     }
 
@@ -62,14 +64,64 @@ impl Button {
         self
     }
 
-    pub fn disabled(mut self, disabled: bool) -> Self {
-        self.disabled = disabled;
-        self
-    }
-
     pub fn on_click(mut self, handler: impl Fn(&ClickEvent, &mut WindowContext) + 'static) -> Self {
         self.on_click = Some(Box::new(handler));
         self
+    }
+}
+
+impl Clickable for Button {
+    fn on_click(mut self, handler: impl Fn(&ClickEvent, &mut WindowContext) + 'static) -> Self {
+        self.on_click = Some(Box::new(handler));
+        self
+    }
+
+    fn cursor_style(mut self, cursor_style: gpui::CursorStyle) -> Self {
+        self.cursor_style = cursor_style;
+        self
+    }
+}
+
+impl Disableable for Button {
+    fn disabled(mut self, disabled: bool) -> Self {
+        self.disabled = disabled;
+        self
+    }
+}
+
+impl FixedWidth for Button {
+    fn width(mut self, width: gpui::DefiniteLength) -> Self {
+        self.base = self.base.w(width);
+        self
+    }
+
+    fn full_width(mut self) -> Self {
+        self.base = self.base.w(relative(1.));
+        self
+    }
+}
+
+impl ParentElement for Button {
+    fn extend(&mut self, elements: impl IntoIterator<Item = AnyElement>) {
+        self.children.extend(elements);
+    }
+}
+
+impl Styled for Button {
+    fn style(&mut self) -> &mut gpui::StyleRefinement {
+        self.base.style()
+    }
+}
+
+impl InteractiveElement for Button {
+    fn interactivity(&mut self) -> &mut gpui::Interactivity {
+        self.base.interactivity()
+    }
+}
+
+impl From<Button> for AnyElement {
+    fn from(button: Button) -> Self {
+        button.into_any_element()
     }
 }
 
@@ -125,30 +177,6 @@ impl RenderOnce for Button {
                         })
                 }
             })
-    }
-}
-
-impl ParentElement for Button {
-    fn extend(&mut self, elements: impl IntoIterator<Item = AnyElement>) {
-        self.children.extend(elements);
-    }
-}
-
-impl Styled for Button {
-    fn style(&mut self) -> &mut gpui::StyleRefinement {
-        self.base.style()
-    }
-}
-
-impl InteractiveElement for Button {
-    fn interactivity(&mut self) -> &mut gpui::Interactivity {
-        self.base.interactivity()
-    }
-}
-
-impl From<Button> for AnyElement {
-    fn from(button: Button) -> Self {
-        button.into_any_element()
     }
 }
 

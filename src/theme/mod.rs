@@ -1,8 +1,5 @@
 mod color_scheme;
-mod radii;
-
 pub use color_scheme::*;
-pub use radii::*;
 
 use gpui::{AppContext, Global, WindowAppearance};
 use std::ops::Deref;
