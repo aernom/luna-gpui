@@ -36,7 +36,7 @@ pub fn buttons_page() -> Div {
         )
         .child(
             h_flex().gap_2().children([
-                Button::new(7).label("Rounded"),
+                Button::new(7).label("Rounded (Default)"),
                 Button::new(8)
                     .label("Circular")
                     .appearance(ButtonAppearance::Outline)
@@ -48,7 +48,7 @@ pub fn buttons_page() -> Div {
             ]),
         )
         .child(
-            h_flex().gap_2().children([
+            h_flex().flex_wrap().gap_2().children([
                 Button::new(10)
                     .leading(svg().path("send.svg"))
                     .label("Cookie"),

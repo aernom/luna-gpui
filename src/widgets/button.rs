@@ -5,7 +5,7 @@ use gpui::{
 };
 use smallvec::SmallVec;
 
-use crate::Theme;
+use crate::{BorderRadius, Theme};
 
 #[derive(IntoElement)]
 pub struct Button {
@@ -78,6 +78,7 @@ impl RenderOnce for Button {
         self.base
             .id(self.id)
             .flex()
+            .flex_none()
             .items_center()
             .justify_center()
             .px(px(12.))
@@ -244,9 +245,9 @@ pub enum ButtonShape {
 impl ButtonShape {
     fn radius(&self) -> impl Clone + Into<AbsoluteLength> {
         match self {
-            ButtonShape::Rounded => px(4.),
-            ButtonShape::Circular => px(9999.),
-            ButtonShape::Square => px(0.),
+            ButtonShape::Rounded => BorderRadius::Medium,
+            ButtonShape::Circular => BorderRadius::Circular,
+            ButtonShape::Square => BorderRadius::None,
         }
     }
 }

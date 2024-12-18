@@ -35,6 +35,7 @@ impl Render for Storybook {
         v_flex()
             .w_full()
             .h_full()
+            .flex_wrap()
             .text_color(cx.theme().colors().on_neutral())
             .bg(cx.theme().colors().surface())
             .child(TitleBar::new().child(div().text_sm().child("This is a custom TitleBar")))
